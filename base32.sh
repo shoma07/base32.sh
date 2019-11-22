@@ -84,21 +84,27 @@ base32_decode () {
   done)
 }
 
-command=${1}
-shift
-while getopts :h OPT
-do
-  case $OPT in
-    h)  base32_usage
-      ;;
-    \?) base32_usage
-      ;;
-  esac
-done
-shift $((OPTIND - 1))
+main () {
+  command=${1}
+  shift
+  while getopts :h OPT
+  do
+    case $OPT in
+      h)  base32_usage
+        ;;
+      \?) base32_usage
+        ;;
+    esac
+  done
+  shift $((OPTIND - 1))
 
-if [ "${command}" == "encode" ] || [ "${command}" == "decode" ]; then
-  base32_${command} "${@}"
-else
-  base32_usage
-fi
+  if [ "${command}" == "encode" ] || [ "${command}" == "decode" ]; then
+    base32_${command} "${@}"
+  else
+    base32_usage
+  fi
+
+  exit 0
+}
+
+main ${@}
