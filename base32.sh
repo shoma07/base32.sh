@@ -37,9 +37,9 @@ base32_usage () {
 #   String
 #######################################
 base32_encode () {
-  if [ -p /dev/stdin ]; then args=`cat -`; else args=$@; fi
+  if [ -p /dev/stdin ] && [ -z "${@}" ]; then args=$(cat -); else args=${@}; fi
 
-  echo $(echo $(echo "$(echo "${args[0]}" | fold -1 | while read c; do
+  echo $(echo $(echo "$(echo "${args}" | fold -1 | while read c; do
     hex=($(printf "%b" ${c} | od -tx1 | head -n 1 | tr '[a-z]' '[A-Z]'))
     printf "%08d" $(echo "obase=2;ibase=16;$(echo ${hex[1]})" | bc)
   done)" | fold -5 | while read b; do
@@ -65,9 +65,9 @@ base32_encode () {
 #   String
 #######################################
 base32_decode () {
-  if [ -p /dev/stdin ]; then args=`cat -`; else args=$@; fi
+  if [ -p /dev/stdin ] && [ -z "${@}" ]; then args=$(cat -); else args=${@}; fi
 
-  printf "%s\n" $(echo $(echo "${args[@]}" | sed "s/=//g") | fold -8 | while read s; do
+  printf "%s\n" $(echo $(echo "${args}" | sed "s/=//g") | fold -8 | while read s; do
     echo $(echo "${s}" | fold -1 | while read c; do
       c=$(echo ${c} | tr '[A-Z]' '[a-z]')
       for (( i = 0; i < ${#CHARS[@]}; i++ )); do
