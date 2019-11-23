@@ -87,7 +87,7 @@ base32_decode () {
 main () {
   command=${1}
   shift
-  while getopts :h OPT
+  while getopts h OPT
   do
     case $OPT in
       h)  base32_usage
